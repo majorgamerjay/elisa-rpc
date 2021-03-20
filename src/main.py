@@ -1,10 +1,28 @@
 import dbus
 import json
+import daemon
+import logging
 
+from os import getenv
+from pathlib import Path
 from pypresence import Presence
 from time import sleep
 from collections import deque
 from datetime import timedelta as td
+
+# Setting up logger
+logpath = ""+getenv('HOME')+'.local/share/elisa-rpc'
+Path(logpath).mkdir(parents=True, exist_ok=True)
+logpath = logpath+'/elisa-rpc.log'
+
+log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh = logging.FileHandler(logpath)
+fh.setFormatter(log_formatter)
+fh.setLevel(logging.DEBUG)
+
+logger = logging.getLogger('Elisa-RPC')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(fh)
 
 # Getting RPC configuration details:
 with open('config.json') as config:
@@ -33,7 +51,7 @@ def connect_and_get_dbus_info():
             elisa = session_bus.get_object('org.mpris.MediaPlayer2.elisa',
                 '/org/mpris/MediaPlayer2')
         except dbus.exceptions.DBusException:
-            print('Couldn\'t connect to Elisa\'s Bus')
+            logger.error('Could not connect to Elisa\'s Bus')
             sleep(5)
         else:
             break
@@ -69,7 +87,7 @@ while True:
         try:
             playback_status = elisa_properties.Get("org.mpris.MediaPlayer2.Player", "PlaybackStatus")
         except dbus.exceptions.DBusException:
-            print("Have you closed the program? If you did, restart the program.")
+            logger.error("Could not get PlaybackStatus")
             connect_and_get_dbus_info()
             sleep(5)
         else:
@@ -81,7 +99,7 @@ while True:
 
     RPC_DETAILS = track_artist
 
-    print(RPC_STATE + ' ' + RPC_DETAILS)
+    logger.info(RPC_STATE + ' ' + RPC_DETAILS)
 
     # RPC
     RPC_Client.update(state=RPC_DETAILS,
