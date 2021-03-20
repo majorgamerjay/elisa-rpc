@@ -1,8 +1,24 @@
 import dbus
+import json
 
+from pypresence import Presence
 from time import sleep
 from collections import deque
 from datetime import timedelta as td
+
+# Getting RPC configuration details:
+with open('config.json') as config:
+    datalist = json.load(config)
+    client_id = datalist['id']
+    small_image_key = datalist['small_image_key']
+    large_image_key = datalist['large_image_key']
+    small_image_text = datalist['small_image_text']
+    large_image_text = datalist['large_image_text']
+    config.close()
+
+RPC_Client = Presence(client_id)
+
+RPC_Client.connect()
 
 # Connect and get information about player and music using D-Bus
 # The interfaces must be reinitialized again to get the data stored into the
@@ -36,6 +52,8 @@ connect_and_get_dbus_info()
 
 # Add list of artists to one variable and declare it by popping by dequed
 while True:
+    connect_and_get_dbus_info()
+
     track_name = metadata.get('xesam:title') or meta.get('xesam:url')
     track_artists = metadata.get('xesam:artist')
 
@@ -57,7 +75,21 @@ while True:
         else:
             break
 
-    print(f'{str(elisa_properties.Get("org.mpris.MediaPlayer2.Player", "PlaybackStatus"))}: "{track_name}" by {track_artist}')
+    RPC_STATE = '{}: "{}"'.format(
+            playback_status,
+            track_name)
+
+    RPC_DETAILS = track_artist
+
+    print(RPC_STATE + ' ' + RPC_DETAILS)
+
+    # RPC
+    RPC_Client.update(state=RPC_DETAILS,
+            details=RPC_STATE,
+            large_image=large_image_key,
+            large_text=large_image_text,
+            small_image=small_image_text,
+            small_text=small_image_text)
 
     # Sleep to increase count
     sleep(15)
