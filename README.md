@@ -32,6 +32,7 @@ from the root directory to the /src directory.
 
 ### Run the script!
 
-1. Run the script, `python3 /src/main.py`
+1. cd into the directory, `cd ./src`
+1. Run the script, `python3 main.py`
 
 This program is created under MIT License.
