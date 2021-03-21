@@ -3,6 +3,7 @@
 ### MajorGamerJay
 #### majorgamerjay@protonmail.com
 
+<img src="https://i.imgur.com/3YvZzRV.png" alt="screenshot" align="right" height=240px>
 elisa-rpc is a program that shows your currently playing song in Elisa music
 player to discord. Uses D-Bus to communicate with the Elisa music player and
 then show music information to Discord.
@@ -31,6 +32,7 @@ from the root directory to the /src directory.
 
 ### Run the script!
 
-1. Run the script, `python3 /src/main.py`
+1. cd into the directory, `cd ./src`
+2. Run the script, `python3 elisa-rpc.py`
 
 This program is created under MIT License.
