@@ -6,6 +6,7 @@ import logging
 from os import getenv
 from pathlib import Path
 from pypresence import Presence
+from pypresence import exceptions as pyexep
 from time import sleep
 from collections import deque
 from datetime import timedelta as td
@@ -66,7 +67,17 @@ metadata = None # Getting metadata of currently playing song
 
 with daemon.DaemonContext(files_preserve = [ fh.stream ]):
     RPC_Client = Presence(client_id)
-    RPC_Client.connect()
+
+    # Error handling in case Discord is closed when connecting to RPC
+    while True:
+        try:
+            RPC_Client.connect()
+        except (FileNotFoundError, ConnectionRefusedError):
+            logger.error("Could not connect to RPC. Do you have discord running?")
+            sleep(5)
+        else:
+            break
+
     session_bus = dbus.SessionBus()
     already_stopped = 0 # Magic variable for controlling the stoppah!
 
@@ -136,7 +147,40 @@ with daemon.DaemonContext(files_preserve = [ fh.stream ]):
                         small_text=small_image_text)
                 already_stopped = 1
             sleep(5)
-            RPC_Client.clear()
+            # This handles if discord closes or turns on
+            while True:
+                try:
+                    RPC_Client.clear()
+                except (ConnectionRefusedError, pyexep.InvalidID):
+                    logger.error('Connection reset, retrying connection')
+                    while True:
+                        try:
+                            RPC_Client.connect()
+                        except (FileNotFoundError, ConnectionRefusedError):
+                            logger.error("Could not connect to RPC. Do you have discord running?")
+                            sleep(5)
+                        else:
+                            break
+                    sleep(5)
+                else:
+                    break
+
         else:
-            RPC_Client.clear()
+            while True:
+                try:
+                    RPC_Client.clear()
+                except (ConnectionRefusedError, pyexep.InvalidID):
+                    logger.error('Connection reset, retrying connection')
+                    # This handles error just in case Discord still hasn't turned on
+                    while True:
+                        try:
+                            RPC_Client.connect()
+                        except (FileNotFoundError, ConnectionRefusedError):
+                            logger.error("Could not connect to RPC. Do you have discord running?")
+                            sleep(5)
+                        else:
+                            break
+                    sleep(5)
+                else:
+                    break
             sleep(5)
