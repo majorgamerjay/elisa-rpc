@@ -11,7 +11,7 @@ then show music information to Discord.
 ## How to use it
 
 To use it, copy the config file template (config_template.json)
-from the root directory to the /src directory.
+from the root directory to the /src as config.json directory.
 
 ### Get required dependencies!
 
