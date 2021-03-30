@@ -35,4 +35,24 @@ from the root directory to the /src directory as config.json
 1. cd into the directory, `cd ./src`
 2. Run the script, `python3 elisa-rpc.py`
 
+## Other tips
+
+### Check whether the program is working
+
+By default, this program is daemonized (meaning this will run in background). If the program isn't working, just open your process monitor and search for `elisa-rpc.py`. If it does not exist, then the program is not working.
+
+Paste the program's log files from `~/.local/share/elisa-rpc/` and open an issue. I will try my best to reply as soon as possible.
+
+### States of the program
+
+All states of the RPC is updated every 5 seconds.
+
+- When Elisa is not playing a song (at stopped), then the program will display `Stopped: <songname>` at Discord RPC for 5 seconds and it will clear
+- When it is playing, a song: it will show information about that song in RPC
+- If the song is paused: It will show the song is puased within the RPC
+
+### Want to contribute?
+
+Just make a pull request however you want lol. But I would appreciate if your code is well commented and more understandable. :)
+
 This program is created under MIT License.
