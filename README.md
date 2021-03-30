@@ -49,7 +49,7 @@ All states of the RPC is updated every 5 seconds.
 
 - When Elisa is not playing a song (at stopped), then the program will display `Stopped: <songname>` at Discord RPC for 5 seconds and it will clear
 - When it is playing, a song: it will show information about that song in RPC
-- If the song is paused: It will show the song is puased within the RPC
+- If the song is paused: It will show the song is paused within the RPC
 
 ### Want to contribute?
 
