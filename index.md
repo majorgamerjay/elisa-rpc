@@ -1,37 +1,58 @@
-## Welcome to GitHub Pages
+# Elisa-RPC
 
-You can use the [editor on GitHub](https://github.com/MajorGamerJay/elisa-rpc/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+### MajorGamerJay
+#### majorgamerjay@protonmail.com
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<img src="https://i.imgur.com/3YvZzRV.png" alt="screenshot" align="right" height=240px>
+elisa-rpc is a program that shows your currently playing song in Elisa music
+player to discord. Uses D-Bus to communicate with the Elisa music player and
+then show music information to Discord.
 
-### Markdown
+## How to use it
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+To use it, copy the config file template (config_template.json)
+from the root directory to the /src directory as config.json
 
-```markdown
-Syntax highlighted code block
+### Get required dependencies!
 
-# Header 1
-## Header 2
-### Header 3
+1. pip install -r requirements.txt
 
-- Bulleted
-- List
+### Create an application to represent the RPC
 
-1. Numbered
-2. List
+1. Go to: https://discord.com/developers/applications
+2. Create new application
 
-**Bold** and _Italic_ and `Code` text
+### Put required info in config file
 
-[Link](url) and ![Image](src)
-```
+1. Copy Client ID and put it in "id" field in config.json
+2. Go to Rich Presence
+3. Upload your art assets
+4. In place of image_keys in config.json, place the name of your art assets
+5. Add description for your art asset in config.json
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Run the script!
 
-### Jekyll Themes
+1. cd into the directory, `cd ./src`
+2. Run the script, `python3 elisa-rpc.py`
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/MajorGamerJay/elisa-rpc/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Other tips
 
-### Support or Contact
+### Check whether the program is working
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+By default, this program is daemonized (meaning this will run in background). If the program isn't working, just open your process monitor and search for `elisa-rpc.py`. If it does not exist, then the program is not working.
+
+Paste the program's log files from `~/.local/share/elisa-rpc/` and open an issue. I will try my best to reply as soon as possible.
+
+### States of the program
+
+All states of the RPC is updated every 5 seconds.
+
+- When Elisa is not playing a song (at stopped), then the program will display `Stopped: <songname>` at Discord RPC for 5 seconds and it will clear
+- When it is playing, a song: it will show information about that song in RPC
+- If the song is paused: It will show the song is paused within the RPC
+
+### Want to contribute?
+
+Just make a pull request however you want lol. But I would appreciate if your code is well commented and more understandable. :)
+
+This program is created under MIT License.
